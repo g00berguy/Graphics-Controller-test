@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using BepInEx.Configuration;
+using System.IO;
 
 namespace GraphicsController.ComputerInterface
 {
@@ -13,6 +15,8 @@ namespace GraphicsController.ComputerInterface
         const string title = "ffffff";
         const string subsetting = "ffffff";
         private readonly UISelectionHandler selectionHandler;
+        bool FirstLoad;
+        string location;
 
         public CIVIew()
         {
@@ -25,6 +29,18 @@ namespace GraphicsController.ComputerInterface
         public override void OnShow(object[] args)
         {
             base.OnShow(args);
+            if (FirstLoad)
+            {
+                location = Directory.GetCurrentDirectory();
+                ConfigFile configFile = new ConfigFile($@"{location}\BepInEx\config\Graphics Controller.cfg", true);
+                ConfigEntry<int> setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
+
+                if (setting1.Value >= 0 && setting1.Value <= 9)
+                {
+                    GraphicInt = setting1.Value;
+                }
+                FirstLoad = false;
+            }
             UpdateText();
         }
 

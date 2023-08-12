@@ -1,8 +1,10 @@
 ﻿using BepInEx;
+using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using GraphicsController.ComputerInterface;
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Utilla;
 
@@ -22,7 +24,6 @@ namespace GraphicsController
         string location;
         ConfigFile configFile;
         public ConfigEntry<int> setting1;
-
         void Start()
         {
             location = Directory.GetCurrentDirectory();
@@ -32,12 +33,13 @@ namespace GraphicsController
             {
                 ChangeGraphics(setting1.Value);
             }
+            Bepinject.Zenjector.Install<MainInstaller>().OnProject();
             Utilla.Events.GameInitialized += OnGameInitialized;
         }
 
         void Awake()
         {
-            Bepinject.Zenjector.Install<MainInstaller>().OnProject();
+            
         }
 
         void ChangeGraphics(int gr)
@@ -64,7 +66,7 @@ namespace GraphicsController
 
         void OnGameInitialized(object sender, EventArgs e)
         {
-            /* Code here runs after the game initializes (i.e. GorillaLocomotion.Player.Instance != null) */
+            
         }
 
         void Update()
