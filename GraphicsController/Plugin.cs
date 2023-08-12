@@ -24,12 +24,14 @@ namespace GraphicsController
         string location;
         ConfigFile configFile;
         public ConfigEntry<int> setting1;
+        public static Plugin instance;
         void Start()
         {
+            instance = this;
             location = Directory.GetCurrentDirectory();
             configFile = new ConfigFile($@"{location}\BepInEx\config\Graphics Controller.cfg", true);
             setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
-            if (setting1.Value >= 1 && setting1.Value <= 9)
+            if (setting1.Value >= 1)
             {
                 ChangeGraphics(setting1.Value);
             }

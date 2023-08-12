@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 using BepInEx.Configuration;
 using System.IO;
+using GraphicsController;
 
 namespace GraphicsController.ComputerInterface
 {
@@ -31,13 +32,9 @@ namespace GraphicsController.ComputerInterface
             base.OnShow(args);
             if (FirstLoad)
             {
-                location = Directory.GetCurrentDirectory();
-                ConfigFile configFile = new ConfigFile($@"{location}\BepInEx\config\Graphics Controller.cfg", true);
-                ConfigEntry<int> setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
-
-                if (setting1.Value >= 0 && setting1.Value <= 9)
+                if (Plugin.instance.setting1.Value >= 0)
                 {
-                    GraphicInt = setting1.Value;
+                    GraphicInt = Plugin.instance.setting1.Value;
                 }
                 FirstLoad = false;
             }
@@ -48,6 +45,18 @@ namespace GraphicsController.ComputerInterface
         {
             SetText(str =>
             {
+                if (FirstLoad)
+                {
+                    location = Directory.GetCurrentDirectory();
+                    ConfigFile configFile = new ConfigFile($@"{location}\BepInEx\config\Graphics Controller.cfg", true);
+                    ConfigEntry<int> setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
+
+                    if (setting1.Value >= 0 && setting1.Value <= 9)
+                    {
+                        GraphicInt = setting1.Value;
+                    }
+                    FirstLoad = false;
+                }
                 str.BeginCenter();
                 str.MakeBar('-', SCREEN_WIDTH, 0, "ffffff10");
                 str.AppendClr("|| Graphics Controller ||", title).EndColor().AppendLine();

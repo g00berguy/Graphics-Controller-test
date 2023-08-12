@@ -33,7 +33,10 @@
       <HintPath>$(GameAssemblyPath)\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="ComputerInterface">
-      <HintPath>D:\MrFartStink\apps\Steam\steamapps\common\Gorilla Tag\BepInEx\plugins\ComputerInterface.dll</HintPath>
+      <HintPath>D:\MrFartStink\apps\Steam\steamapps\common\Gorilla Tag\BepInEx\plugins\ComputerInterface\ComputerInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="ComputerInterface.Commands">
+      <HintPath>D:\MrFartStink\apps\Steam\steamapps\common\Gorilla Tag\BepInEx\plugins\ComputerInterface\ComputerInterface.Commands.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Security">
       <HintPath>$(GameAssemblyPath)\Mono.Security.dll</HintPath>
@@ -88,6 +91,9 @@
     </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>$(GameAssemblyPath)\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>D:\MrFartStink\apps\Steam\steamapps\common\Gorilla Tag\BepInEx\plugins\ComputerInterface\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>$(GameAssemblyPath)\Unity.Timeline.dll</HintPath>
