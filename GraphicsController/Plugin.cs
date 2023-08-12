@@ -1,6 +1,8 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using GraphicsController.ComputerInterface;
 using System;
+using System.IO;
 using UnityEngine;
 using Utilla;
 
@@ -17,11 +19,19 @@ namespace GraphicsController
     public class Plugin : BaseUnityPlugin
     {
         bool inRoom;
+        string location;
+        ConfigFile configFile;
+        public ConfigEntry<int> setting1;
 
         void Start()
         {
-            
-
+            location = Directory.GetCurrentDirectory();
+            configFile = new ConfigFile($@"{location}\BepInEx\config\Graphics Controller.cfg", true);
+            setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
+            if (setting1.Value >= 1 && setting1.Value <= 9)
+            {
+                ChangeGraphics(setting1.Value);
+            }
             Utilla.Events.GameInitialized += OnGameInitialized;
         }
 
@@ -30,7 +40,10 @@ namespace GraphicsController
             Bepinject.Zenjector.Install<MainInstaller>().OnProject();
         }
 
-        
+        void ChangeGraphics(int gr)
+        {
+            QualitySettings.masterTextureLimit = gr;
+        }
 
         void OnEnable()
         {

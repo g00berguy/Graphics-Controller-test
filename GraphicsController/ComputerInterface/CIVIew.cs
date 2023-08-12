@@ -28,11 +28,6 @@ namespace GraphicsController.ComputerInterface
             UpdateText();
         }
 
-        void Awake()
-        {
-            OnShow(null);
-        }
-
         public void UpdateText()
         {
             SetText(str =>
@@ -40,7 +35,7 @@ namespace GraphicsController.ComputerInterface
                 str.BeginCenter();
                 str.MakeBar('-', SCREEN_WIDTH, 0, "ffffff10");
                 str.AppendClr("|| Graphics Controller ||", title).EndColor().AppendLine();
-                str.AppendLine("Goober");
+                str.AppendLine(PluginInfo.Version);
                 str.MakeBar('-', SCREEN_WIDTH, 0, "ffffff10");
                 str.EndAlign().AppendLines(1);
                 str.MakeBar(' ', SCREEN_WIDTH, 0, "ffffff10");
