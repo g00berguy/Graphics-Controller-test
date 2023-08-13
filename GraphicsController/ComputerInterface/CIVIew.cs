@@ -1,12 +1,8 @@
 ﻿using ComputerInterface.ViewLib;
 using ComputerInterface;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using BepInEx.Configuration;
 using System.IO;
-using GraphicsController;
 
 namespace GraphicsController.ComputerInterface
 {
@@ -16,8 +12,9 @@ namespace GraphicsController.ComputerInterface
         const string title = "ffffff";
         const string subsetting = "ffffff";
         private readonly UISelectionHandler selectionHandler;
-        bool FirstLoad;
-        string location;
+        ConfigFile configFile;
+        ConfigEntry<int> setting1;
+
 
         public CIVIew()
         {
@@ -30,13 +27,13 @@ namespace GraphicsController.ComputerInterface
         public override void OnShow(object[] args)
         {
             base.OnShow(args);
-            if (FirstLoad)
+            if (setting1 == null)
             {
-                if (Plugin.instance.setting1.Value >= 0)
-                {
-                    GraphicInt = Plugin.instance.setting1.Value;
-                }
-                FirstLoad = false;
+                configFile = new ConfigFile(Directory.GetCurrentDirectory() + @"\BepInEx\config\Graphics Controller.cfg", true);
+                setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
+                GraphicInt = setting1.Value;
+                UpdateText();
+                Debug.Log("First Load done!");
             }
             UpdateText();
         }
@@ -45,18 +42,6 @@ namespace GraphicsController.ComputerInterface
         {
             SetText(str =>
             {
-                if (FirstLoad)
-                {
-                    location = Directory.GetCurrentDirectory();
-                    ConfigFile configFile = new ConfigFile($@"{location}\BepInEx\config\Graphics Controller.cfg", true);
-                    ConfigEntry<int> setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
-
-                    if (setting1.Value >= 0 && setting1.Value <= 9)
-                    {
-                        GraphicInt = setting1.Value;
-                    }
-                    FirstLoad = false;
-                }
                 str.BeginCenter();
                 str.MakeBar('-', SCREEN_WIDTH, 0, "ffffff10");
                 str.AppendClr("|| Graphics Controller ||", title).EndColor().AppendLine();
@@ -96,6 +81,7 @@ namespace GraphicsController.ComputerInterface
                     break;
                 case EKeyboardKey.Enter:
                     ChangeGraphics(GraphicInt);
+                    SetConfig();
                     break;
             }
         }
@@ -103,6 +89,12 @@ namespace GraphicsController.ComputerInterface
         void ChangeGraphics(int gr)
         {
             QualitySettings.masterTextureLimit = gr;
+        }
+
+        void SetConfig()
+        {
+            setting1.Value = GraphicInt;
+            configFile.Save();
         }
     }
 }
