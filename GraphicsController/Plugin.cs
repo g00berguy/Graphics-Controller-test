@@ -23,9 +23,10 @@ namespace GraphicsController
         string location;
         ConfigFile configFile;
         public ConfigEntry<int> setting1;
-        void Start()
+        void Awake()
         {
-            location = Directory.GetCurrentDirectory();
+            Zenjector.Install<MainInstaller>().OnProject();
+
             location = Directory.GetCurrentDirectory();
             configFile = new ConfigFile($@"{location}\BepInEx\config\Graphics Controller.cfg", true);
             setting1 = configFile.Bind("Graphics Controller", "Graphics Quality", 0, "The graphics quality that is used on launch\nPick a number 1-9 (0 for default)");
@@ -33,19 +34,14 @@ namespace GraphicsController
             {
                 ChangeGraphics(setting1.Value);
             }
-            configFile.SaveOnConfigSet = true;
             Utilla.Events.GameInitialized += OnGameInitialized;
             Application.quitting += Quitting;
         }
 
         void Quitting()
         {
-
-        }
-
-        void Awake()
-        {
-            Zenjector.Install<MainInstaller>().OnProject();
+            setting1.Value = QualitySettings.masterTextureLimit;
+            configFile.Save();
         }
 
         void ChangeGraphics(int gr)
@@ -56,17 +52,14 @@ namespace GraphicsController
 
         void OnEnable()
         {
-            /* Set up your mod here */
-            /* Code here runs at the start and whenever your mod is enabled*/
+            ChangeGraphics(setting1.Value);
 
             HarmonyPatches.ApplyHarmonyPatches();
         }
 
         void OnDisable()
         {
-            /* Undo mod setup here */
-            /* This provides support for toggling mods with ComputerInterface, please implement it :) */
-            /* Code here runs whenever your mod is disabled (including if it disabled on startup)*/
+            ChangeGraphics(0);
 
             HarmonyPatches.RemoveHarmonyPatches();
         }
